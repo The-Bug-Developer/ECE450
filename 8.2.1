@@ -21,21 +21,21 @@ from math import pi, exp, cos, sin, log, sqrt
 from control import margin
 from control import tf
 
-wc = 1e3
-W = 300
+s = 1
 
-n = 2
+tol = 0.01
 
-num = [0,0,W**2]
-den =[1,2*cos(1*pi/(2*n))*W,W**2]
+num = [1,0,0]
+den = [0,1,1]
+den = np.convolve(den,[1,2*cos(1*pi/5),1])
+den = np.convolve(den,[1,2*cos(2*pi/5),1])
 
 system = sig.lti(num,den)
-w,Hmag,Hphase = sig.bode(system,10000)
+w,Hmag,Hphase = sig.bode(system)
 
 plt.figure(figsize= (10,5))
-plt.subplot(2,1,1)
-plt.title('Second Order Low Pass',size = 12)
-#plt.axis([0.1,10000,0,1])
+plt.title('Fifth Order Low Pass',size = 20)
+plt.axis([0.1,10,0,1])
 plt.xlabel('$\omega$ rad/s')
 plt.ylabel('|H|')
 plt.yticks([0,0.1,0.95,0.707,1])
@@ -43,31 +43,50 @@ plt.grid(which='both')
 plt.semilogx(w,10**(0.05*Hmag),'k')
 plt.savefig('Bode.png',dpi=300)
 
+dt = 0.001
+NN = 50000
+TT = np.arange(0,NN*dt,dt)
+y=np.zeros(NN)
+f=np.zeros(NN)
 
-num = [0,0,W**2,0,0]
-den = [1,1.41*W,(2*wc**2+W**2),1.41*W*wc**2,wc**4]
+A,B,C,D = sig.tf2ss(num,den)
+x = np.zeros(np.shape(B))
 
-system = sig.lti(num,den)
-w,Hmag,Hphase = sig.bode(system,1000)
+lookup = 0.707
+output = 1.00
 
+for i in range(len(Hmag)):
+    if( 10**(0.05*Hmag[i]) >= (lookup*(1-tol))  and 10**(0.05*Hmag[i])  <= (lookup*(1+tol))):
+        output = w[i]
+        #print('True',10**(0.05*Hmag[i]) ,lookup,output,w[i])
+        break;
 
-plt.subplot(2,1,2)
-plt.title('Bandpass',size = 12)
-plt.axis([wc/10,10*wc,0,1])
+omega = output
+for i in range(NN):
+    f[i] = sin(omega*i*dt)
+
+Omega = str(omega)
+plt.figure(figsize = (10,5))
+plt.suptitle('$\omega =$ '+Omega,size = 15)
+plt.subplot(2,1,1)
+plt.title('Input')
+plt.axis([0.1,50,-1,1])
 plt.xlabel('$\omega$ rad/s')
 plt.ylabel('|H|')
-plt.yticks([0,0.1,0.95,0.8,1])
-plt.xticks([920,1080,700,1300])
+plt.yticks([0,0.1,0.5,0.707,1])
 plt.grid(which='both')
-plt.semilogx(w,10**(0.05*Hmag),'k')
-plt.savefig('Bode.png',dpi=300)
+plt.plot(TT,f,'k')
 
-#dt = 0.002
-#NN = 5000
-#TT = np.arrange(0,NN*dt,dt)
-#
-#y = np.zeros(NN)
-#f = np.zeros(NN)
-#
-#
-#A,B,C,D = sig.tf2ss(num,den)
+for i in range(NN):
+    x = x + dt*A.dot(x) + dt*B*f[i]          
+    y[i] = C.dot(x) + D*f[i]
+    
+plt.subplot(2,1,2)
+plt.title('Output')
+plt.axis([0.1,50,-1,1])
+plt.xlabel('$\omega$ rad/s')
+plt.ylabel('|H|')
+plt.yticks([0,0.1,0.95,0.707,1])
+plt.grid(which='both')
+plt.plot(TT,y,'k')
+plt.savefig('0.95.png',dpi=300)
