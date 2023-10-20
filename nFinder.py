@@ -23,13 +23,14 @@ from control import margin
 from control import tf
 
 
-wp = 0.85
-Hp2 = (0.85)**2
+
+wp = 0.9
+Hp2 = (0.8)**2
 
 np = math.log10(1/Hp2 -1)/(2*math.log10(wp))
 
-ws = 600/c
-Hp2 = (0.2)**2
+ws = 2.2
+Hp2 = (0.1)**2
 
 ns = math.log10(1/Hp2 -1)/(2*math.log10(ws))
 print('np =',np)
