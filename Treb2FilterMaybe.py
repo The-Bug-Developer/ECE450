@@ -21,33 +21,35 @@ from math import pi, exp, cos, sin, log, sqrt
 from control import margin
 from control import tf
 
-s = 1
+#s = 1
 Hp = 0.7
 Hs = 0.3
-ws = 320/180
-eps = sqrt(1/Hp**2-1)
+ws = 1
+wp= 0.65
+eps = sqrt(Hs**2/(1-Hs**2))
 alpha  = 1/eps + sqrt(1+1/eps**2)
 
-n = (np.arccosh((1/eps)*sqrt((1/abs(Hs)**2)-1))*(1/(np.arccosh(ws))))
+n = round(np.arccosh(sqrt(1/(eps**2*(1-Hp**2))))*1/np.arccosh(1/wp))
 
-a = 0.5*(alpha**(1/n)+alpha**(-1/n))
+a = 0.5*(alpha**(1/n)-alpha**(-1/n))
 b = 0.5*(alpha**(1/n)+alpha**(-1/n))
 
-d1 = [1,a]
-d2 = [1,-2*a*cos(pi/n),a**2*cos(pi/n)**2+b**2*sin(pi/n)**2]
-K=1
-num = [0,0,K]
-den = np.convolve(d1,d2)
+theta = 45*pi/180
 
+s1 = a*cos(theta)+1j*b*sin(theta)
+q1 = 1/s
+q1c = np.conjugate(q1)
 
+n1 = [1,0,(1/cos(pi/4))**2]
+d1 = [1,np.real(q1+q1c),np.real(q1*q1c)]
+K= d1[2]/n1[2]
 
-
-system = sig.lti(num,den)
+system = sig.lti(n1,d1)
 w,Hmag,Hphase = sig.bode(system,1000)
 
 plt.figure(figsize= (10,5))
 plt.title('Third Order Low Pass',size = 20)
-plt.axis([s/10,s*10,0,1])
+plt.axis([s/100,s*100,0,2])
 plt.xlabel('$\omega$ rad/s')
 plt.ylabel('|H|')
 plt.yticks([0,0.1,0.8,0.707,1])
