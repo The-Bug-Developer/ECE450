@@ -22,16 +22,16 @@ from control import margin
 from control import tf
 
 s = 1
-Hp = 0.7
-Hs = 0.3
+Hp = 0.92
+Hs = 0.1
 ws = 1
-wp = .65
+wp = .8
 eps = sqrt(Hs**2/(1-Hs**2))
 alpha  = 1/eps + sqrt(1+1/eps**2)
 
 n = np.arccosh(sqrt(1/(eps**2*(1-Hp**2))))*1/np.arccosh(1/wp)
 print("n=",n)
-a = 0.5*(alpha**(1/n)+alpha**(-1/n))
+a = 0.5*(alpha**(1/n)-alpha**(-1/n))
 b = 0.5*(alpha**(1/n)+alpha**(-1/n))
 
 #d1 = [1,a]

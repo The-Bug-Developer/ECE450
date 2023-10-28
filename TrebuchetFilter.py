@@ -22,9 +22,9 @@ from control import margin
 from control import tf
 
 s = 1
-Hp = 0.7
-Hs = 0.3
-ws = 320/180
+Hp = 0.944
+Hs = 0.1
+ws = 1.2
 eps = sqrt(1/Hp**2-1)
 alpha  = 1/eps + sqrt(1+1/eps**2)
 
@@ -35,9 +35,12 @@ b = 0.5*(alpha**(1/n)+alpha**(-1/n))
 
 d1 = [1,a]
 d2 = [1,-2*a*cos(pi/n),a**2*cos(pi/n)**2+b**2*sin(pi/n)**2]
-K=1
-num = [0,0,K]
+
+
 den = np.convolve(d1,d2)
+K= den[3]*Hp
+
+num = [K,0,1]
 
 
 

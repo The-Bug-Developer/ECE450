@@ -22,8 +22,6 @@ from math import pi, exp, cos, sin, log, sqrt
 from control import margin
 from control import tf
 
-
-
 wp = 0.9
 Hp2 = (0.8)**2
 
