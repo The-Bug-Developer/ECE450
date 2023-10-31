@@ -52,8 +52,6 @@ f=np.zeros(NN)
 A,B,C,D = sig.tf2ss(num,den)
 x = np.zeros(np.shape(B))
 
-
-
 omega = 90
 
 for i in range(NN):
