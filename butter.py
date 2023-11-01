@@ -8,13 +8,23 @@ from control import margin
 from control import tf
 
 Hp = 1 
-Hs = 2
+Hs = 1
 wp = 1
 ws = 1
 k=1
 
+s = 30
+
 d1 = np.convolve([0,0,0,0,1,6,15,15],[0,7])
 d4 =d1+np.convolve([0,0,0,0,1,3,3],[1,0,0])
+
+print(len(d4))
+print(d4)
+
+d4[8] = d4[8]*s**4
+d4[7] = d4[7]*s**3
+d4[6] = d4[6]*s**2
+d4[5] = d4[5]*s
 # for i in range(len(d4)-1):
 #     try:
 #         if(d4[len(d4)-i]):
@@ -22,8 +32,8 @@ d4 =d1+np.convolve([0,0,0,0,1,3,3],[1,0,0])
 #     except:
 #         print('Failed')
 #         k=k
-k =d4[len(d4)-1]
-n1 = [0,0,0,0,k*Hs]
+k =d4[len(d4)-1]*s**4
+n1 =[0,k*Hs]
 
 num= n1
 den= d4
@@ -50,11 +60,11 @@ f = y
 A,B,C,D = sig.tf2ss(num,den)
 x = np.zeros(np.shape(B))
 
-omega = 3
+omega = 30
 
 for n in range(NN):
-   aaa = (((n-2000)/30)**2)
-   f[n] = cos((omega*(n-2000))*dt)
+   aaa = (((n-5000)/30)**2)
+   f[n] = cos((omega*(n-5000))*dt)*exp(-aaa*dt)
     
 #for i in range(NN):
 #    f[i] = sin(omega*i*dt)
