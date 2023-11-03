@@ -40,7 +40,6 @@ b = 0.5*(alpha**(1/n)+alpha**(-1/n))
 theta = 45*pi/180
 
 
-
 s1 = a*cos(theta)+1j*b*sin(theta)
 q1 = 1/s1
 q1c = np.conjugate(q1)
