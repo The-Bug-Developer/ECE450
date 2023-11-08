@@ -19,7 +19,10 @@ H = np.zeros(NN, dtype = np.complex)
 """---- One pole filter (Eq, 9.1.3) ------------"""
 for n in range(0,NN):
     z = cmath.exp(1j*phi[n])
-    H[n] = 0.095*z/(z - .905)
+    try:
+        H[n] = (0.002*z)/(z**2-1.97*z**1 + .97)
+    except:
+        print('woops')
 plt.subplot(211)
 plt.semilogx((180/pi)*phi,20*np.log10(H),'k')
 #plt.plot((180/pi)*phi,abs(H))
@@ -59,8 +62,11 @@ y = np.zeros(MM)
 w1 = 5
 w2 = 100
 for k in range(1,MM):
-    x[k] = 1.*sin(w1*dt*k) + sin(w2*dt*k)
-    y[k] = .905*y[k-1] + .095*x[k]
+    try:
+        x[k] = 1.*sin(w1*dt*k) + sin(w2*dt*k)
+        y[k] = 0.002*x[k]+1.97*y[k-1]-0.97*[k-2]
+    except:
+        print('woops')
 plt.subplot(211)
 plt.plot(x,'k')
 plt.ylabel('x[k]')

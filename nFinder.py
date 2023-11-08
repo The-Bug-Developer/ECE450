@@ -23,7 +23,7 @@ from control import margin
 from control import tf
 
 wp = 0.9
-Hp2 = (0.8)**2
+Hp2 = (0.9)**2
 
 np = math.log10(1/Hp2 -1)/(2*math.log10(wp))
 

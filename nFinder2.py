@@ -22,17 +22,17 @@ from control import margin
 from control import tf
 
 
-c = 195
+c = 235
 
 
-wp = (160/c)
-Hp2 = (0.8)**2
+wp = (200/c)
+Hp2 = (0.9)**2
 
 np = math.log10(1/Hp2 -1)/(2*math.log10(wp))
 
 
-ws = 600/c
-Hp2 = (0.2)**2
+ws = 400/c
+Hp2 = (0.1)**2
 
 ns = math.log10(1/Hp2 -1)/(2*math.log10(ws))
 print('np =',np)

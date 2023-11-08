@@ -22,8 +22,8 @@ from control import margin
 from control import tf
 
 s = 1
-Hp = 0.95
-Hs = 0.15
+Hp = 0.9
+Hs = 0.1
 ws = 1
 wp = 0.5
 eps = sqrt(Hs**2/(1-Hs**2))
