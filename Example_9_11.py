@@ -63,8 +63,13 @@ w1 = 5
 w2 = 100
 for k in range(1,MM):
     try:
+<<<<<<< HEAD
         x[k] = 0.5*sin(5*dt*k) + sin(0.5*dt*k)
         y[k] = 0.001*x[k-1]+1.921*y[k-1]-0.922*y[k-2]
+=======
+        x[k] = 1.*sin(w1*dt*k) + sin(w2*dt*k)
+        y[k] = 0.002*x[k]+1.97*y[k-1]-0.97*y[k-2]
+>>>>>>> f4e01056eee8649c40f909ccdfdd93df79312132
     except:
         print(k)
 plt.subplot(2,1,1)
