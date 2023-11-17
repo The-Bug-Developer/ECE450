@@ -21,8 +21,8 @@ from math import pi, exp, cos, sin, log, sqrt
 from control import margin
 from control import tf
 
-wc = 1e3
-W = 300
+wc = 1
+W = 1
 
 n = 2
 

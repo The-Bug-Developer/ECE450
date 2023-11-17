@@ -1,76 +1,100 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Nov  8 10:48:29 2023
-
-@author: void
-"""
-
-""" Example 9.1.1"""
+""" Find_FIR.py """
 import matplotlib.pyplot as plt
 import numpy as np
+from scipy import signal as sig
 from math import pi, exp, cos, sin, log, sqrt
-import cmath
-NN = 1000
-phi = np.linspace(0,2*pi,NN)
-dt = .01
-z = np.zeros(NN, dtype = np.complex)
-H = np.zeros(NN, dtype = np.complex)
-"""---- One pole filter (Eq, 9.1.3) ------------"""
-for n in range(0,NN):
-    z = cmath.exp(1j*phi[n])
-    H[n] = 0.095*z/(z - .905)
-plt.subplot(211)
-plt.semilogx((180/pi)*phi,20*np.log10(H),'k')
-#plt.plot((180/pi)*phi,abs(H))
-plt.axis([1, 100, -40, 10])
-plt.ylabel('|H| ')
-plt.yticks([-40,-20,-3,0])
-plt.axvline(5.7,color='k')
-plt.text(3,-15,'$\phi$ = {}'.format(round(5.7,3)),fontsize=12)
-plt.axvline(57,color='k')
-plt.text(30,-15,'$\phi$ = {}'.format(round(57,3)),fontsize=12)
-plt.title('Example_9-1-1')
-plt.grid(which='both')
-aaa = np.angle(H)
-#for n in range(NN):
-# if aaa[n] > pi:
-# aaa[n] = aaa[n] - 2*pi
-plt.subplot(212)
-plt.semilogx((180/pi)*phi,(180/pi)*aaa,'k')
-#plt.plot((180/pi)*phi,(180/pi)*aaa,'k')
-plt.ylabel('/H (degrees)')
-plt.axis([1, 100, -90, 0])
-plt.yticks([-90,-45,0])
-#plt.axis([.1,100, -90,90])
-#plt.yticks([-90,-45,0])
-#plt.xticks([1,5.7,10,100])
-plt.axvline(5.7,color='k')
-plt.axvline(57,color='k')
-#plt.text(.3,-70,'$\phi$ = {}'.format(round(5.7,2)),fontsize=12)
-plt.grid(which='both')
-plt.xlabel('$\phi$ (degrees)')
-plt.savefig('H_zbode.png',dpi=300)
-plt.show()
-"""This is the time-domain simulation of section 9.1.3"""
-MM = 500
-x = np.zeros(MM)
-y = np.zeros(MM)
-w1 = 5
-w2 = 100
-for k in range(1,MM):
-    x[k] = 1.*sin(w1*dt*k) + sin(w2*dt*k)
-    y[k] = .905*y[k-1] + .095*x[k]
-plt.subplot(211)
-plt.plot(x,'k')
-plt.ylabel('x[k]')
-plt.title('Example_9-1-1')
+NN = 100
+N2 = int(NN/2)
+x = np.zeros(NN)
+y = np.zeros(NN)
+dt = .002
+TT = np.linspace(0,dt*(NN-1),NN)
+DF = 1/(dt*NN)
+FF = np.linspace(0,DF*(NN-1),NN)
+f1 = 20
+f2 = 80
+f3 = 150
+freq1 = 2*pi*f1
+freq2 = 2*pi*f2
+freq3 = 2*pi*f3
+x = np.sin(freq1*TT) + 1*np.sin(freq2*TT) + 1*np.sin(freq3*TT)
+plt.subplot(321)
+plt.plot(TT,x,'k')
+plt.axis([0,NN*dt,-2.5,2.5])
+plt.text(5,-15,'$\phi$ = {}'.format(round(14,3)),fontsize=12)
+plt.title('Find_FIR')
+plt.ylabel('a). x[k]')
+plt.xlabel('T (sec)')
 plt.grid()
-plt.subplot(212)
-plt.plot(y,'k')
-plt.ylabel('y[k]')
-plt.axis([0,MM,-1.2,1.2])
-plt.yticks([-1,-.7,0,.7,1])
+X = (1/NN)*np.fft.fft(x)
+""" Create the filter """
+H = np.zeros(NN)
+""" Rectangular Low pass """
+for n in range(8):
+    H[n] = 1
+""" Low pass """
+
+#for n in range(4):
+# H[n] = 1
+#for n in range(4,16):
+# H[n] = exp(-.5*((n-4)/4)**2)
+""" Band pass """
+#for n in range(N2):
+# H[n] = exp(-.5*((n-16)/4)**2)
+""" High pass """
+#for n in range(15):
+# H[n] = exp(-.5*((n-15)/4)**2)
+#for n in range(15,N2+2):
+# H[n] = 1
+""" Reflect the positive frequencies to the right side """
+for n in range(1,N2-1):
+    H[NN-n] = H[n]
+    Y = H*X
+plt.subplot(322)
+plt.plot(FF,abs(X),'k',label='X')
+plt.plot(FF,H,'k--',label='H')
+plt.legend(loc='upper right')
+plt.ylabel('b). H(w),X(w)')
+plt.xlabel('Freq (Hz)')
 plt.grid()
-plt.savefig('Time_plot.png')
+plt.axis([0,200,0,1.1])
+plt.xticks([20,80,150])
+h = np.fft.ifft(H)
+plt.subplot(323)
+plt.plot(h.real,'k')
+plt.xlabel('k')
+plt.ylabel('c). h[k]')
+plt.grid()
+plt.axis([0,NN,-.1,.2])
+M = 20
+hh = np.zeros(NN)
+""" Move the filter to the left side """
+for n in range(M):
+    hh[n+M] = h[n].real
+    hh[M-n] = hh[M+n]
+plt.subplot(324)
+plt.plot(hh,'ok')
+plt.axis([0 ,2*M,-.1,.25])
+plt.xlabel('k')
+plt.ylabel('d). hh[k]')
+plt.grid()
+""" Convolve hh and x """
+yy=np.convolve(hh,x)
+y = np.zeros(NN)
+for n in range(NN):
+    y[n] = yy[n+M]
+plt.subplot(325)
+plt.plot(TT,y,'k')
+plt.ylabel('e). y[k]')
+plt.xlabel('T (sec)')
+plt.grid()
+Y = (1/NN)*np.fft.fft(y)
+plt.subplot(326)
+plt.plot(FF,abs(Y),'k')
+plt.axis([0,200,-.1,.6])
+plt.xticks([0,20,80,150])
+plt.ylabel('f). Y[w]')
+plt.xlabel('Freq (Hz)')
+plt.grid()
+plt.savefig('f.png',dpi=300)
 plt.show()

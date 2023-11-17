@@ -11,29 +11,33 @@ import matplotlib.pyplot as plt
 import numpy as np
 from math import pi, exp, cos, sin, log, sqrt
 import cmath
-NN = 1000
+NN = 10000
 phi = np.linspace(0,2*pi,NN)
 dt = .01
 z = np.zeros(NN, dtype = complex)
 H = np.zeros(NN, dtype = complex)
+a = 0.00010
+c = 1
+T = 0.1
+k= 1
 """---- One pole filter (Eq, 9.1.3) ------------"""
 for n in range(0,NN):
     z = cmath.exp(1j*phi[n])
     try:
-        H[n] = (0.001*z)/(z**2-1.921*z + .922)
+        H[n] = k*(a*T*z**2-a*T*z)/((c*T**2+1)*z**2-(a*T+2)*z+1)
     except:
         print('woops')
 plt.subplot(211)
 plt.semilogx((180/pi)*phi,20*np.log10(H),'k')
 #plt.plot((180/pi)*phi,abs(H))
-plt.axis([1, 100, -40, 10])
+plt.axis([0.1, 100, -40, 10])
 plt.ylabel('|H| ')
 plt.yticks([-40,-20,-3,0])
 plt.axvline(5.7,color='k')
 plt.text(3,-15,'$\phi$ = {}'.format(round(5.7,3)),fontsize=12)
 plt.axvline(57,color='k')
 plt.text(30,-15,'$\phi$ = {}'.format(round(57,3)),fontsize=12)
-plt.title('Problem_9-1-1')
+plt.title('Problem_9-1-3')
 plt.grid(which='both')
 aaa = np.angle(H)
 #for n in range(NN):
@@ -63,13 +67,8 @@ w1 = 5
 w2 = 100
 for k in range(1,MM):
     try:
-<<<<<<< HEAD
-        x[k] = 0.5*sin(5*dt*k) + sin(0.5*dt*k)
-        y[k] = 0.001*x[k-1]+1.921*y[k-1]-0.922*y[k-2]
-=======
-        x[k] = 1.*sin(w1*dt*k) + sin(w2*dt*k)
-        y[k] = 0.002*x[k]+1.97*y[k-1]-0.97*y[k-2]
->>>>>>> f4e01056eee8649c40f909ccdfdd93df79312132
+        x[k] = 0.5*sin(0.1*dt*k) + 0.5*sin(10*dt*k)+sin(dt*k)
+        y[k] = (a*T)*x[k]-(a*T)*x[k-1]-y[k-2]+((a*T)+2)*y[k-1]+(c*T**2+1)*y[k]
     except:
         print(k)
 plt.subplot(2,1,1)
