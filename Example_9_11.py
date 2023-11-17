@@ -64,7 +64,7 @@ w2 = 100
 for k in range(1,MM):
     try:
         x[k] = 1.*sin(w1*dt*k) + sin(w2*dt*k)
-        y[k] = 0.002*x[k]+1.97*y[k-1]-0.97*[k-2]
+        y[k] = 0.002*x[k]+1.97*y[k-1]-0.97*y[k-2]
     except:
         print('woops')
 plt.subplot(211)
