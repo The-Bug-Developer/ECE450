@@ -22,13 +22,13 @@ from math import pi, exp, cos, sin, log, sqrt
 from control import margin
 from control import tf
 
-wp = 0.9
-Hp2 = (0.9)**2
+wp = 0.99
+Hp2 = (0.707)**2
 
 np = math.log10(1/Hp2 -1)/(2*math.log10(wp))
 
-ws = 2.2
-Hp2 = (0.1)**2
+ws = 4
+Hp2 = (0.01)**2
 
 ns = math.log10(1/Hp2 -1)/(2*math.log10(ws))
 print('np =',np)
