@@ -16,7 +16,7 @@ phi = np.linspace(0,2*pi,NN)
 dt = .01
 z = np.zeros(NN, dtype = complex)
 H = np.zeros(NN, dtype = complex)
-a = 0.00010
+a = 1
 c = 1
 T = 0.1
 k= 1
@@ -37,7 +37,7 @@ plt.axvline(5.7,color='k')
 plt.text(3,-15,'$\phi$ = {}'.format(round(5.7,3)),fontsize=12)
 plt.axvline(57,color='k')
 plt.text(30,-15,'$\phi$ = {}'.format(round(57,3)),fontsize=12)
-plt.title('Problem_9-1-3')
+plt.title('Problem_9-3-1')
 plt.grid(which='both')
 aaa = np.angle(H)
 #for n in range(NN):

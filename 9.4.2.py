@@ -62,15 +62,14 @@ H = np.zeros(NN)
 #for n in range(4,16):
 # H[n] = exp(-.5*((n-4)/4)**2)
 """ Band pass """
-A = bandaid(4,np.zeros(NN))
-B = bandaid(36,np.zeros(NN))
-H = A+B
+A = bandaid(20,np.zeros(NN))
+
+H = H = np.ones(NN)-A
 
 plt.subplot(4,2,(1,2))
-plt.title('Find_FIR')
+plt.title('9.4.2')
 plt.plot(FF,abs(X),'k',label='X')
 plt.plot(FF,A,'r--',label='A')
-plt.plot(FF,B,'b--',label='B')
 plt.legend(loc='upper right')
 plt.ylabel('b). H(w),X(w)')
 plt.xlabel('Freq (Hz)')
@@ -144,5 +143,5 @@ plt.xticks([0,20,100,180,300])
 plt.ylabel('f). Y[w]')
 plt.xlabel('Freq (Hz)')
 plt.grid()
-plt.savefig('f.png',dpi=300)
+plt.savefig('9.4.2.png',dpi=300)
 plt.show()

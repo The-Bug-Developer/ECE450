@@ -5,8 +5,8 @@ import numpy as np
 from scipy import signal as sig
 from math import pi, exp, cos, sin, log, sqrt
 
-fac = 1.3
-
+fac = 1
+bound = 150
 dt = .002/fac
 NN = int(100*fac)
 
@@ -17,7 +17,7 @@ y = np.zeros(NN)
 def bandaid(first,H):
     I = H
     fend = first + 0
-    tol = 4
+    tol = 3
     for n in range(N2):
         I[n] = exp(-.5*((n-first)/tol)**2)
     return I
@@ -36,10 +36,8 @@ freq2 = 2*pi*f2
 freq3 = 2*pi*f3
 freq4 = 2*pi*f4
 
-x = 2*np.sin(freq1*TT)
-x+= 2*np.sin(freq2*TT)
-x+= 2*np.sin(freq3*TT)
-x+= 2*np.sin(freq4*TT)
+for n in range(NN):
+    x[n] = np.sin(2*pi*100*n*dt)+0.5*np.random.normal(0,1)
 
 plt.figure(figsize=[10,12])
 plt.subplot(423)
@@ -62,21 +60,19 @@ H = np.zeros(NN)
 #for n in range(4,16):
 # H[n] = exp(-.5*((n-4)/4)**2)
 """ Band pass """
-A = bandaid(4,np.zeros(NN))
-B = bandaid(36,np.zeros(NN))
-H = A+B
+A = bandaid(20,np.zeros(NN))
+H = A
 
 plt.subplot(4,2,(1,2))
-plt.title('Find_FIR')
+plt.title('9.4.4')
 plt.plot(FF,abs(X),'k',label='X')
 plt.plot(FF,A,'r--',label='A')
-plt.plot(FF,B,'b--',label='B')
 plt.legend(loc='upper right')
 plt.ylabel('b). H(w),X(w)')
 plt.xlabel('Freq (Hz)')
 plt.grid()
-plt.axis([0,325,0,1.1])
-plt.xticks([20,100,180,300])
+plt.axis([0,bound,0,1.1])
+plt.xticks([100])
 
 """ High pass """
 #for n in range(15):
@@ -94,8 +90,8 @@ plt.legend(loc='upper right')
 plt.ylabel('b). H(w),X(w)')
 plt.xlabel('Freq (Hz)')
 plt.grid()
-plt.axis([0,325,0,1.1])
-plt.xticks([20,100,180,300])
+plt.axis([0,bound,0,1.1])
+plt.xticks([100])
 
 h = np.fft.ifft(H)
 
@@ -106,7 +102,7 @@ plt.ylabel('c). h[k]')
 plt.grid()
 plt.axis([0,NN,-.1,.2])
 
-M = 5
+M = 8
 hh = np.zeros(NN)
 
 """ Move the filter to the left side """
@@ -116,7 +112,7 @@ for n in range(M):
 
 plt.subplot(426)
 plt.plot(hh,'ok')
-plt.axis([0 ,2*M,-.1,.25])
+plt.axis([0 ,2*M,-.15,.25])
 plt.xlabel('k')
 plt.ylabel('d). hh[k]')
 plt.grid()
@@ -139,10 +135,10 @@ Y = (1/NN)*np.fft.fft(y)
 
 plt.subplot(428)
 plt.plot(FF,abs(Y),'k')
-plt.axis([0,325,-.1,1])
-plt.xticks([0,20,100,180,300])
+plt.axis([0,bound,-.1,1])
+plt.xticks([100])
 plt.ylabel('f). Y[w]')
 plt.xlabel('Freq (Hz)')
 plt.grid()
-plt.savefig('f.png',dpi=300)
+plt.savefig('9.4.4.png',dpi=300)
 plt.show()

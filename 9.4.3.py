@@ -5,8 +5,8 @@ import numpy as np
 from scipy import signal as sig
 from math import pi, exp, cos, sin, log, sqrt
 
-fac = 1.3
-
+fac = 1.4
+bound = 350
 dt = .002/fac
 NN = int(100*fac)
 
@@ -62,12 +62,12 @@ H = np.zeros(NN)
 #for n in range(4,16):
 # H[n] = exp(-.5*((n-4)/4)**2)
 """ Band pass """
-A = bandaid(4,np.zeros(NN))
-B = bandaid(36,np.zeros(NN))
+A = bandaid(20,np.zeros(NN))
+B = bandaid(60,np.zeros(NN))
 H = A+B
 
 plt.subplot(4,2,(1,2))
-plt.title('Find_FIR')
+plt.title('9.4.3')
 plt.plot(FF,abs(X),'k',label='X')
 plt.plot(FF,A,'r--',label='A')
 plt.plot(FF,B,'b--',label='B')
@@ -75,7 +75,7 @@ plt.legend(loc='upper right')
 plt.ylabel('b). H(w),X(w)')
 plt.xlabel('Freq (Hz)')
 plt.grid()
-plt.axis([0,325,0,1.1])
+plt.axis([0,bound,0,1.1])
 plt.xticks([20,100,180,300])
 
 """ High pass """
@@ -94,7 +94,7 @@ plt.legend(loc='upper right')
 plt.ylabel('b). H(w),X(w)')
 plt.xlabel('Freq (Hz)')
 plt.grid()
-plt.axis([0,325,0,1.1])
+plt.axis([0,bound,0,1.1])
 plt.xticks([20,100,180,300])
 
 h = np.fft.ifft(H)
@@ -106,7 +106,7 @@ plt.ylabel('c). h[k]')
 plt.grid()
 plt.axis([0,NN,-.1,.2])
 
-M = 5
+M = 12
 hh = np.zeros(NN)
 
 """ Move the filter to the left side """
@@ -139,10 +139,10 @@ Y = (1/NN)*np.fft.fft(y)
 
 plt.subplot(428)
 plt.plot(FF,abs(Y),'k')
-plt.axis([0,325,-.1,1])
+plt.axis([0,bound,-.1,1])
 plt.xticks([0,20,100,180,300])
 plt.ylabel('f). Y[w]')
 plt.xlabel('Freq (Hz)')
 plt.grid()
-plt.savefig('f.png',dpi=300)
+plt.savefig('9.4.3.png',dpi=300)
 plt.show()
