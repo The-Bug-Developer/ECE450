@@ -2,7 +2,7 @@
 #                                                              #
 # Zachary DeLuca                                               #
 # ECE 450                                                      #
-# Exam 2                                                       #
+# Exam 4                                                     #
 # Due: Oct 06                                                  #
 #                                                              #
 ################################################################
@@ -33,33 +33,32 @@ den = np.convolve(den,[1,2*cos(1*pi/3)*s,s**2])
 system = sig.lti(num,den)
 w,Hmag,Hphase = sig.bode(system)
 
-plt.figure(figsize= (14,8))
-plt.subplot(211)
+plt.figure(figsize= (8,8))
+plt.subplot(2,1,1)
 plt.title('Third Order Low Pass',size = 20)
 plt.axis([s/10,s*10,0,1])
 plt.axvline(s,color ="RED",linestyle='dotted')
 plt.axvline(s*4,color ="RED",linestyle='dotted')
-# plt.xlabel('$\omega$ rad/s')
+#plt.xlabel('$\omega$ rad/s')
 plt.ylabel('|H|')
 plt.xticks([s,s*4])
-plt.yticks([0,0.1,0.9,0.707,1])
+plt.yticks([0,0.1,0.95,0.707,1])
 plt.grid(which='both')
 plt.semilogx(w,10**(0.05*Hmag),'k')
 plt.savefig('Bode.png',dpi=300)
 
-plt.subplot(212)
+plt.subplot(2,1,2)
 plt.title('Third Order Low Pass Phase',size = 12)
 plt.axis([s/10,s*10,0,1])
 plt.axvline(s,color ="RED",linestyle='dotted')
 plt.axvline(s*4,color ="RED",linestyle='dotted')
 plt.xlabel('$\omega$ rad/s')
-plt.ylabel('\phi')
+plt.ylabel('$\phi$')
 plt.xticks([s,s*4])
-plt.yticks([0,-90,-45,-135,-270])
+plt.yticks([0,-45,-90,-180,-270])
 plt.grid(which='both')
 plt.semilogx(w,Hphase,'k')
 plt.savefig('Bode.png',dpi=300)
-
 #dt = 0.001
 #NN = 50000
 #TT = np.arange(0,NN*dt,dt)
